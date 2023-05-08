@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtCodigo = new System.Windows.Forms.RichTextBox();
@@ -55,7 +55,7 @@
             this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label2.Font = new System.Drawing.Font("Bernard MT Condensed", 24F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.Control;
-            this.label2.Location = new System.Drawing.Point(317, 9);
+            this.label2.Location = new System.Drawing.Point(386, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(249, 38);
             this.label2.TabIndex = 0;
@@ -74,12 +74,12 @@
             // 
             // txtCodigo
             // 
+            this.txtCodigo.Font = new System.Drawing.Font("OCR A Extended", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCodigo.Location = new System.Drawing.Point(21, 102);
             this.txtCodigo.Name = "txtCodigo";
             this.txtCodigo.Size = new System.Drawing.Size(498, 477);
             this.txtCodigo.TabIndex = 3;
             this.txtCodigo.Text = "";
-            this.txtCodigo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCodigo_KeyPress);
             this.txtCodigo.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtCodigo_KeyUp);
             // 
             // groupBox1
@@ -131,6 +131,7 @@
             this.btnImportarArchivo.TabIndex = 1;
             this.btnImportarArchivo.Text = "Importar archivo";
             this.btnImportarArchivo.UseVisualStyleBackColor = true;
+            this.btnImportarArchivo.Click += new System.EventHandler(this.btnImportarArchivo_Click);
             // 
             // btnGuardarArchivo
             // 
@@ -142,6 +143,7 @@
             this.btnGuardarArchivo.TabIndex = 0;
             this.btnGuardarArchivo.Text = "Guardar archivo";
             this.btnGuardarArchivo.UseVisualStyleBackColor = true;
+            this.btnGuardarArchivo.Click += new System.EventHandler(this.btnGuardarArchivo_Click);
             // 
             // groupBox2
             // 
@@ -172,9 +174,9 @@
             // 
             this.Palabra.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Palabra.DataPropertyName = "palabra";
-            dataGridViewCellStyle16.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle16.ForeColor = System.Drawing.Color.Black;
-            this.Palabra.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle22.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle22.ForeColor = System.Drawing.Color.Black;
+            this.Palabra.DefaultCellStyle = dataGridViewCellStyle22;
             this.Palabra.HeaderText = "Palabra";
             this.Palabra.MinimumWidth = 100;
             this.Palabra.Name = "Palabra";
@@ -183,9 +185,9 @@
             // 
             this.Token.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Token.DataPropertyName = "categoria";
-            dataGridViewCellStyle17.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle17.ForeColor = System.Drawing.Color.Black;
-            this.Token.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle23.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle23.ForeColor = System.Drawing.Color.Black;
+            this.Token.DefaultCellStyle = dataGridViewCellStyle23;
             this.Token.HeaderText = "Token";
             this.Token.MinimumWidth = 100;
             this.Token.Name = "Token";
@@ -194,9 +196,9 @@
             // 
             this.Indice.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.Indice.DataPropertyName = "indiceStage";
-            dataGridViewCellStyle18.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle18.ForeColor = System.Drawing.Color.Black;
-            this.Indice.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle24.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle24.ForeColor = System.Drawing.Color.Black;
+            this.Indice.DefaultCellStyle = dataGridViewCellStyle24;
             this.Indice.HeaderText = "Indice";
             this.Indice.Name = "Indice";
             this.Indice.Width = 93;
@@ -210,7 +212,10 @@
             this.Controls.Add(this.txtCodigo);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
+            this.Font = new System.Drawing.Font("OCR A Extended", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Analizador";
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTokens)).EndInit();
