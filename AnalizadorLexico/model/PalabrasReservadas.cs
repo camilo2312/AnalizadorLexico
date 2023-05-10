@@ -23,8 +23,6 @@ namespace AnalizadorLexico.model
                 "CADENA",
                 "CARACTER",
                 "SI",
-                "YY",
-                "OO",
                 "ENTONCES",
                 "SINO",
                 "MIENTRAS",

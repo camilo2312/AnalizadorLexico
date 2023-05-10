@@ -114,12 +114,12 @@ namespace AnalizadorLexico
         /// <param name="desdeArchivo">Parametros que permite saber si el usuario cargo un archivo para su lectura</param>
         private void analizar(bool desdeArchivo)
         {
-            analizadorLexico.codigo = txtCodigo.Text.Replace("\n", "");
+            analizadorLexico.codigo = txtCodigo.Text;
             analizadorLexico.lstTokens = new List<Token>();
             analizadorLexico.extraerTokens();
 
             var source = new BindingSource();
-            source.DataSource = analizadorLexico.lstTokens;
+            source.DataSource = analizadorLexico.lstTokens.Where(x => x.categoria != Categoria.ESPACIO).ToList();
             dataGridTokens.DataSource = source;
 
 

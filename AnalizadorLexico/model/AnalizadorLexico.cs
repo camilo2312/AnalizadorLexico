@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AnalizadorLexico.model
 {
@@ -54,6 +55,26 @@ namespace AnalizadorLexico.model
             if (token != null)
                 return token;
 
+            token = extraerOperadorAsignacion(posicion);
+            if (token != null)
+                return token;
+
+            token = extraerOperadorIncremento(posicion);
+            if (token != null)
+                return token;
+
+            token = extraerComentarioLinea(posicion);
+            if (token != null)
+                return token;
+
+            token = extraerComentarioBloque(posicion);
+            if (token != null)
+                return token;
+
+            token = extraerOperadorDecremento(posicion);
+            if (token != null)
+                return token;
+
             token = extraerOperadorAritmetico(posicion);
             if (token != null)
                 return token;
@@ -99,6 +120,18 @@ namespace AnalizadorLexico.model
                 return token;
 
             token = extraerCadenaCaracteres(posicion);
+            if (token != null)
+                return token;
+
+            token = extraerHexadecimal(posicion);
+            if (token != null)
+                return token;
+
+            token = extraerOperadorRelacional(posicion);
+            if (token != null)
+                return token;
+
+            token = extraerOperadorLogico(posicion);
             if (token != null)
                 return token;
 
@@ -196,7 +229,7 @@ namespace AnalizadorLexico.model
         /// <returns></returns>
         private Token extraerEspacio(int posicion) 
         {
-            if (Char.IsWhiteSpace(codigo[posicion]))
+            if (Char.IsWhiteSpace(codigo[posicion]) || codigo[posicion] == '\n')
                 return new Token(codigo.Substring(posicion, 1), Categoria.ESPACIO, posicion + 1);
 
             return null;
@@ -381,6 +414,233 @@ namespace AnalizadorLexico.model
                 }
                 return new Token(codigo.Substring(posicion, indice - posicion), Categoria.CADENA_CARACTERES, indice);
             }
+            return null;
+        }
+
+        /// <summary>
+        /// Método que permite obtener los operadores relacionales del código ingresado
+        /// </summary>
+        /// <param name="posicion">Parametros que señala la posición actual de la cual se va a extraer el operador relacional</param>
+        /// <returns></returns>
+        private Token extraerOperadorRelacional(int posicion)
+        {
+            int posicionSiguiente = posicion + 1;
+            switch (codigo[posicion])
+            {
+                case '>':
+                case '<':
+                    if (posicionSiguiente < codigo.Length && codigo[posicionSiguiente] == '=')
+                    {
+                        return new Token(codigo.Substring(posicion, 2), Categoria.OPERADOR_RELACIONAL, posicionSiguiente + 1);
+                    }
+
+                    return new Token(codigo.Substring(posicion, 1), Categoria.OPERADOR_RELACIONAL, posicion + 1);
+                case '=':
+                case '!':
+                    if (posicionSiguiente < codigo.Length && codigo[posicionSiguiente] == '=')
+                    {
+                        return new Token(codigo.Substring(posicion, 2), Categoria.OPERADOR_RELACIONAL, posicionSiguiente + 1);
+                    }
+                    break;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Función que realiza la extracción de un operador lógico
+        /// </summary>
+        /// <param name="posicion">Dato que obtiene la posición actual para comenzar con la extracción del operador</param>
+        /// <returns></returns>
+        private Token extraerOperadorLogico(int posicion)
+        {
+            int valorSig = posicion + 1;
+            if (codigo[posicion] == 'Y')
+            {
+                if (valorSig < codigo.Length && codigo[valorSig] == 'Y')
+                {
+                    return new Token(codigo.Substring(posicion, 2), Categoria.OPERADOR_LOGICO, valorSig + 1);
+                }
+            }
+            else if (codigo[posicion] == 'O')
+            {
+                if (valorSig < codigo.Length && codigo[valorSig] == 'O')
+                {
+                    return new Token(codigo.Substring(posicion, 2), Categoria.OPERADOR_LOGICO, valorSig + 1);
+                }
+            }
+            else if (codigo[posicion] == 'N')
+            {
+                if (valorSig < codigo.Length && codigo[valorSig] == 'O')
+                {
+                    int valorNot = valorSig + 1;
+                    if (valorNot < codigo.Length && codigo[valorNot] == 'T')
+                    {
+                        return new Token(codigo.Substring(posicion, 3), Categoria.OPERADOR_LOGICO, valorNot + 1);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Función que realiza la extracción de un operador de incremento (++)
+        /// </summary>
+        /// <param name="posicion">Dato que muestra la posición actual para comenzar a extraer el operador de incremento</param>
+        /// <returns></returns>
+        private Token extraerOperadorIncremento(int posicion) 
+        {
+            int valorSig = posicion + 1;
+            if (codigo[posicion] == '+')
+            {
+                if (valorSig < codigo.Length && codigo[valorSig] == '+')
+                {
+                    return new Token(codigo.Substring(posicion, 2), Categoria.OPERADOR_INCREMENTO, valorSig + 1);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Función que realiza la extracción de un operador de decremento (--)
+        /// </summary>
+        /// <param name="posicion">Dato que muestra la posición actual para comenzar a extraer el operador de decremento</param>
+        /// <returns></returns>
+        private Token extraerOperadorDecremento(int posicion)
+        {
+            int valorSig = posicion + 1;
+            if (codigo[posicion] == '-')
+            {
+                if (valorSig < codigo.Length && codigo[valorSig] == '-')
+                {
+                    return new Token(codigo.Substring(posicion, 2), Categoria.OPERADOR_DECREMENTO, valorSig + 1);
+                }
+            }
+
+            return null;
+        }
+        
+        /// <summary>
+        /// Función que señala los caracteres del código que son comentarios de línea
+        /// </summary>
+        /// <param name="posicion">Determina la posicón donde se empiza a evaluar el comentario de línea</param>
+        /// <returns></returns>
+        private Token extraerComentarioLinea(int posicion)
+        {
+            if (codigo[posicion] == '/') 
+            {
+                int valorSig = posicion + 1;
+                if (valorSig < codigo.Length && codigo[valorSig] == '/')
+                {
+                    while (valorSig < codigo.Length)
+                    {
+                        if (codigo[valorSig] == '\n')
+                            break;
+                        valorSig++;
+                    }
+
+                    return new Token(codigo.Substring(posicion, valorSig - posicion), Categoria.COMENTARIO_LINEA, valorSig);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Función que permite obtener el token de comentario de bloque
+        /// </summary>
+        /// <param name="posicion">Dato que marca el inició de la extracción del token de comentario de bloque del código ingresado</param>
+        /// <returns></returns>
+        private Token extraerComentarioBloque(int posicion)
+        {
+            if (codigo[posicion] == '/')
+            {
+                int valorSig = posicion + 1;
+                if (valorSig < codigo.Length && codigo[valorSig] == ':')
+                {
+                    while (valorSig < codigo.Length)
+                    {
+                        if (valorSig < codigo.Length && codigo[valorSig] == ':')
+                        {
+                            valorSig = valorSig + 1;
+                            if (valorSig < codigo.Length && codigo[valorSig] == '/')
+                            {
+                                valorSig++;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            valorSig++;
+                        }
+                    }
+
+                    return new Token(codigo.Substring(posicion, valorSig - posicion), Categoria.COMENTARIO_BLOQUE, valorSig);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Función que extrae un operador de asignación
+        /// </summary>
+        /// <param name="posicion">El la posición donde se inicia a extraer el operador</param>
+        /// <returns></returns>
+        private Token extraerOperadorAsignacion(int posicion)
+        {
+            int valorSig = posicion + 1;
+            switch (codigo[posicion])
+            {
+                case '=':
+                    return new Token(codigo.Substring(posicion, 1), Categoria.OPERADOR_ASIGNACION, valorSig);
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '%':
+                    if (valorSig < codigo.Length && codigo[valorSig] == '=')
+                    {
+                        return new Token(codigo.Substring(posicion, 2), Categoria.OPERADOR_ASIGNACION, valorSig + 1);
+                    }
+                    break;
+                default:
+                    return null;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Función que extrae los números hexadecimales del código fuente ingresado
+        /// </summary>
+        /// <param name="posicion">Dato que indica la posicón actual de donde se parte para extraer el número hexadecimal</param>
+        /// <returns></returns>
+        private Token extraerHexadecimal(int posicion)
+        {
+            int posicionInicial = posicion + 1;
+            if (codigo[posicion] == 'H')
+            {
+                if (posicionInicial < codigo.Length && ((codigo[posicionInicial] >= 65 && codigo[posicionInicial] <= 70) || (codigo[posicionInicial] >= 97 && codigo[posicionInicial] <= 102) || (codigo[posicionInicial] >= 48 && codigo[posicionInicial] <= 57)))
+                {
+                    while (posicionInicial < codigo.Length)
+                    {
+                        if ((codigo[posicionInicial] >= 65 && codigo[posicionInicial] <= 70) || (codigo[posicionInicial] >= 97 && codigo[posicionInicial] <= 102) || (codigo[posicionInicial] >= 48 && codigo[posicionInicial] <= 57))
+                        {
+                            posicionInicial++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    return new Token(codigo.Substring(posicion, posicionInicial - posicion), Categoria.HEXADECIMAL, posicionInicial);
+                }
+            }
+
             return null;
         }
     }
