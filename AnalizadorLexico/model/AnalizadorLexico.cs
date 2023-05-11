@@ -244,9 +244,11 @@ namespace AnalizadorLexico.model
             if (codigo[posicion] == '$')
             {
                 int inicio = posicion + 1;
-                while (inicio < codigo.Length && Char.IsLetter(codigo[inicio]))
+                int cantidad = 0;
+                while (inicio < codigo.Length && Char.IsLetter(codigo[inicio]) && cantidad < 10)
                 {
                     inicio++;
+                    cantidad++;
                 }
 
                 return new Token(codigo.Substring(posicion, inicio - posicion), Categoria.IDENTIFICADOR, inicio);
